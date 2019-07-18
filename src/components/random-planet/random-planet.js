@@ -23,7 +23,7 @@ export default class RandomPlanet extends Component {
     // clearInterval(this.interval);
   }
 
-  onplanetLoaded = (planet) => {
+  onPlanetLoaded = (planet) => {
     this.setState({planet, 
       loading: false});
   }
@@ -39,7 +39,7 @@ export default class RandomPlanet extends Component {
     const id = Math.floor(Math.random()*15)+2;
     this.swapiService
       .getPlanet(id)
-      .then(this.onplanetLoaded)
+      .then(this.onPlanetLoaded)
       .catch(this.onError);
   }
 
