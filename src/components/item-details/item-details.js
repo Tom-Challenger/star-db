@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
 
-import './person-details.css';
+import './item-details.css';
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
 
   swapiService = new SwapiService();
 
@@ -47,7 +47,7 @@ export default class PersonDetails extends Component {
   }
 
   updatePerson() {
-    const {personId} = this.props;
+    const {personId, getData} = this.props;
     // Проверяем что personId не null
     if (!personId) {
       this.onWait();
@@ -56,8 +56,7 @@ export default class PersonDetails extends Component {
 
     this.onLoad();
 
-    this.swapiService
-      .getPerson(personId)
+    getData(personId)
       .then(this.onPersonLoaded);
   }
 
