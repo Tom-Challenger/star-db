@@ -70,11 +70,7 @@ export default class PersonDetails extends Component {
     const infoMessage = waiting ? <InfoIndicator /> : null;
     const spinner = loading ? <Spinner /> : null;
     const content = hasData ? <PersonView person={person}/> : null;
-
-    if (loading) {
-      this.foo.bar = 0;
-    }
-
+    
     return (
       <div className="person-details card">
         {infoMessage}
