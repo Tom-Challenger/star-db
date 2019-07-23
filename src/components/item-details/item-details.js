@@ -3,31 +3,33 @@ import React, { Component } from 'react';
 import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
 
-import './person-details.css';
+import './item-details.css';
 
-export default class PersonDetails extends Component {
+export default class ItemDetails extends Component {
 
   swapiService = new SwapiService();
 
   state = {
-    person: null,
+    item: null,
+    image: null,
     loading: false,
     waiting: true
   }
 
   componentDidMount() {
-    this.updatePerson();
+    this.updateItem();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.personId !== prevProps.personId) {
-      this.updatePerson();
+    if (this.props.itemId !== prevProps.itemId) {
+      this.updateItem();
     }
   }
 
-  onPersonLoaded = (person) => {
+  onItemLoaded = (item) => {
     this.setState({
-      person, 
+      item,
+      image: this.props.getImageUrl(item),
       loading: false
     });
   }
@@ -46,30 +48,29 @@ export default class PersonDetails extends Component {
     })
   }
 
-  updatePerson() {
-    const {personId} = this.props;
-    // Проверяем что personId не null
-    if (!personId) {
+  updateItem() {
+    const {itemId, getData, getImageUrl} = this.props;
+    // Проверяем что itemId не null
+    if (!itemId) {
       this.onWait();
       return;
     }
 
     this.onLoad();
 
-    this.swapiService
-      .getPerson(personId)
-      .then(this.onPersonLoaded);
+    getData(itemId)
+      .then(this.onItemLoaded);
   }
 
   render() {
 
-    const {person, loading, waiting} = this.state;
+    const {item, image, loading, waiting} = this.state;
 
     const hasData = !(loading || waiting);
 
     const infoMessage = waiting ? <InfoIndicator /> : null;
     const spinner = loading ? <Spinner /> : null;
-    const content = hasData ? <PersonView person={person}/> : null;
+    const content = hasData ? <PersonView person={item} image={image}/> : null;
     
     return (
       <div className="person-details card">
@@ -87,14 +88,14 @@ const InfoIndicator = () => {
   return <span>Selected a person from a list</span>
 }
 
-const PersonView = ({person}) => {
+const PersonView = ({person, image}) => {
 
  const {id, name, gender, birthYear, eyeColor} = person;
 
   return (
     <React.Fragment>
         <img className="person-image"
-          src={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
+          src={image}
           alt="person"/>
 
         <div className="card-body">

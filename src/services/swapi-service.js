@@ -2,6 +2,7 @@ export default class SwapiService {
 
 	// Соглашени: Именование приватных полей класса
 	_apibase = 'https://swapi.co/api';
+	_imagebase = 'https://starwars-visualguide.com/assets/img';
 
 	getResource = async (url) => {
 		const res = await fetch(`${this._apibase}${url}`);
@@ -39,9 +40,21 @@ export default class SwapiService {
 		return res.results.map(this._transformStarship);
 	}
 
-	getStarship = async (id) => {
+	getStarship = async ({id}) => {
 		const starship = await this.getResource(`/starships/${id}/`);
 		return this._transformStarship(starship);
+	}
+
+	getPersonImage = ({id}) => {
+		return `${this._imagebase}/characters/${id}.jpg`
+	}
+
+	getStarshipImage = ({id}) => {
+		return `${this._imagebase}/starships/${id}.jpg`
+	}
+
+	getPlanetImage = ({id}) => {
+		return `${this._imagebase}/planets/${id}.jpg`
 	}
 
 	_extractId(item) {
