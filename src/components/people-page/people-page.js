@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
 
-import SwapiService from '../../services/swapi-service';
 import ItemList from '../item-list';
 import ItemDetails, { Record } from '../item-details/item-details';
-import ErrorBoundry from '../error-boundry';
+
 import Row from '../row';
+import ErrorBoundry from '../error-boundry';
+import SwapiService from '../../services/swapi-service';
+
+import {
+	PersonList,
+	PlanetList,
+	StarshipList,
+	PersonDetails,
+	PlanetDetails,
+	StarshipDetails
+} from '../sw-components';
 
 import './people-page.css'
 
@@ -21,19 +31,21 @@ export default class PeoplePage extends Component {
 		this.setState({
 		  selectedPerson: id
 		});
-	};	
+	};
 
 	render() {
 
  	 	const itemList = (
-	        <ItemList onItemSelected={this.onItemSelected}
-	        	getData={this.swapiService.getAllPeople} 
+	        <ItemList 
+	        	onItemSelected={this.onItemSelected}
+	        	data={null} 
 	        	renderItem={({name, gender, birthYear}) => (
-	        		<span>{`${name} (${gender} ${birthYear})`}</span>)} 
-	        />
+	        		<span>{`${name} (${gender} ${birthYear})`}</span>)}>
+	        	{ ({name}) => <span>{name}</span>}
+	        </ItemList>
  	 	);
 
- 	 	const personDetails = (
+ 	 	const _personDetails = (
  	 		<ItemDetails 
  	 			itemId={this.state.selectedPerson}
  	 			getData={this.swapiService.getPerson}
@@ -45,9 +57,21 @@ export default class PeoplePage extends Component {
  	 		</ItemDetails>
  	 	);
 
+ 	 	const row = <Row left={itemList} right={_personDetails} />
+
+ 	 	const personList = (
+ 	 		<PersonList
+ 	 			onItemSelected={this.onItemSelected}>
+				{ ({name}) => <span>{name}</span>}
+			</PersonList>
+		)
+
+		const personDetails = <PersonDetails 
+			itemId={this.state.selectedPerson} />
+
 		return (
 			<ErrorBoundry>
-				<Row left={itemList} right={personDetails} />
+				<Row left={personList} right={personDetails} />
 			</ErrorBoundry>
 		)
 	}
