@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 
-import Spinner from '../spinner';
-
 import './item-details.css';
+import Spinner from '../spinner';
 
 const Record = ({item, field, label}) => {
   return (
@@ -17,14 +16,19 @@ export {
   Record
 }
 
+const InfoIndicator = () => {
+  return <span>Selected a person from a list</span>
+}
+
 export default class ItemDetails extends Component {
 
   state = {
     item: null,
     image: null,
+
     loading: false,
     waiting: true
-  }
+  };
 
   componentDidMount() {
     this.updateItem();
@@ -36,31 +40,22 @@ export default class ItemDetails extends Component {
     }
   }
 
-  onItemLoaded = (item) => {
+  onWait() {
     this.setState({
-      item,
-      image: this.props.getImageUrl(item),
-      loading: false
+      loading: false,
+      waiting: true
     });
   }
 
-  onLoad = () => {
+  onLoad() {
     this.setState({
       loading: true, 
       waiting: false
     });
   }
 
-  onWait = () => {
-    this.setState({
-      loading: false,
-      waiting: true
-    })
-  }
-
   updateItem() {
-    const {itemId, getData, getImageUrl} = this.props;
-    // Проверяем что itemId не null
+    const { itemId, getData, getImageUrl } = this.props;
     if (!itemId) {
       this.onWait();
       return;
@@ -69,56 +64,46 @@ export default class ItemDetails extends Component {
     this.onLoad();
 
     getData(itemId)
-      .then(this.onItemLoaded);
+      .then((item) => {
+        this.setState({
+          item,
+          image: this.props.getImageUrl(item),
+          loading: false
+        })
+      })
   }
 
   render() {
+    const {loading, waiting} = this.state;
 
-    const {item, image, loading, waiting} = this.state;
+    if (waiting) {
+      return <InfoIndicator />
+    }
 
-    const hasData = !(loading || waiting);
-    const children = this.props.children;
+    if (loading) {
+      return <Spinner />
+    }
 
-    const infoMessage = waiting ? <InfoIndicator /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = hasData ? <PersonView person={item} image={image} children={children} /> : null;
-    
+    const { item, image } = this.state;
+    const { name } = item;
+
     return (
-      <div className="person-details card">
-        {infoMessage}
-        {spinner}
-        {content}
-      </div>
-    )
-  }
-}
-
-
-/* Дочерний элемент фрагмент */
-const InfoIndicator = () => {
-  return <span>Selected a person from a list</span>
-}
-
-const PersonView = ({person, image, children}) => {
-
- const {id, name, gender, birthYear, eyeColor} = person;
-
-  return (
-    <React.Fragment>
-        <img className="person-image"
+      <div className="item-details card">
+        <img className="item-image"
           src={image}
-          alt="person"/>
+          alt="item"/>
 
         <div className="card-body">
           <h4>{name}</h4>
           <ul className="list-group list-group-flush">
-           { 
-              React.Children.map(children, (child) => {
-                return React.cloneElement(child, {item:person});
+            {
+              React.Children.map(this.props.children, (child) => {
+                return React.cloneElement(child, { item });
               })
-           }
+            }
           </ul>
         </div>
-    </React.Fragment>
-  );
+      </div>
+    );
+  }
 }

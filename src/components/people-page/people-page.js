@@ -35,30 +35,6 @@ export default class PeoplePage extends Component {
 
 	render() {
 
- 	 	const itemList = (
-	        <ItemList 
-	        	onItemSelected={this.onItemSelected}
-	        	data={null} 
-	        	renderItem={({name, gender, birthYear}) => (
-	        		<span>{`${name} (${gender} ${birthYear})`}</span>)}>
-	        	{ ({name}) => <span>{name}</span>}
-	        </ItemList>
- 	 	);
-
- 	 	const _personDetails = (
- 	 		<ItemDetails 
- 	 			itemId={this.state.selectedPerson}
- 	 			getData={this.swapiService.getPerson}
- 	 			getImageUrl={this.swapiService.getPersonImage}>
-
- 	 			<Record field="gender" label="Gender" />
- 	 			<Record field="eyeColor" label="Eye color" />
- 	 			<Record field="birthYear" label="Gender" />
- 	 		</ItemDetails>
- 	 	);
-
- 	 	const row = <Row left={itemList} right={_personDetails} />
-
  	 	const personList = (
  	 		<PersonList
  	 			onItemSelected={this.onItemSelected}>
@@ -66,8 +42,10 @@ export default class PeoplePage extends Component {
 			</PersonList>
 		)
 
-		const personDetails = <PersonDetails 
-			itemId={this.state.selectedPerson} />
+		const personDetails = (
+			<PersonDetails 
+				itemId={this.state.selectedPerson} />
+		)
 
 		return (
 			<ErrorBoundry>
