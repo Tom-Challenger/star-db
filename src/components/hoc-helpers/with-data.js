@@ -11,6 +11,16 @@ const withData = (View) => {
     }
 
     componentDidMount() {
+      this.update();
+    }
+
+    componentDidUpdate(prevProps) {
+      //if (this.props.getData !== prevProps.getData) {
+      //  this.update();
+      //}
+    }
+
+    update() {
       // Функция обязана возвращать promise
       this.props.getData()
         .then((data) => {

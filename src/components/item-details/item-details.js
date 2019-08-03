@@ -1,33 +1,26 @@
 import React, { Component } from 'react';
 
-import './item-details.css';
-import Spinner from '../spinner';
 
-const Record = ({item, field, label}) => {
+import './item-details.css';
+
+const Record = ({ item, field, label }) => {
   return (
     <li className="list-group-item">
       <span className="term">{label}</span>
       <span>{ item[field] }</span>
     </li>
-  )
-}
+  );
+};
 
 export {
   Record
-}
-
-const InfoIndicator = () => {
-  return <span>Selected a person from a list</span>
-}
+};
 
 export default class ItemDetails extends Component {
 
   state = {
     item: null,
-    image: null,
-
-    loading: false,
-    waiting: true
+    image: null
   };
 
   componentDidMount() {
@@ -35,56 +28,35 @@ export default class ItemDetails extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.itemId !== prevProps.itemId) {
+    if (this.props.itemId !== prevProps.itemId ||
+      this.props.getData !== prevProps.getData ||
+      this.props.getImageUrl !== prevProps.getImageUrl) {
       this.updateItem();
     }
-  }
-
-  onWait() {
-    this.setState({
-      loading: false,
-      waiting: true
-    });
-  }
-
-  onLoad() {
-    this.setState({
-      loading: true, 
-      waiting: false
-    });
   }
 
   updateItem() {
     const { itemId, getData, getImageUrl } = this.props;
     if (!itemId) {
-      this.onWait();
       return;
     }
-
-    this.onLoad();
 
     getData(itemId)
       .then((item) => {
         this.setState({
           item,
-          image: this.props.getImageUrl(item),
-          loading: false
-        })
-      })
+          image: getImageUrl(item)
+        });
+      });
   }
 
   render() {
-    const {loading, waiting} = this.state;
-
-    if (waiting) {
-      return <InfoIndicator />
-    }
-
-    if (loading) {
-      return <Spinner />
-    }
 
     const { item, image } = this.state;
+    if (!item) {
+      return <span>Select a item from a list</span>;
+    }
+
     const { name } = item;
 
     return (
