@@ -31,7 +31,8 @@ const mapStarshipMethodsToProps = (swapiService) => {
 }
 
 const renderName = ({name}) => <span>{name}</span>
-const renderModelAndName = ({model, name}) => <span>{name} ({model})</span>
+//for example 
+//const renderModelAndName = ({model, name}) => <span>{name} ({model})</span>
 
 const PersonList = withSwapiService(
 						withData(
