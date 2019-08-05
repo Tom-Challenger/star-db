@@ -8,6 +8,9 @@ import './random-planet.css';
 
 export default class RandomPlanet extends Component {
 
+  // Новый синтаксис, не вошедший в стандарт
+  //static intervalUpdate = 10000;
+
   constructor() {
     super();
 
@@ -18,8 +21,11 @@ export default class RandomPlanet extends Component {
     };
 
     this.swapiService = new SwapiService();
-	  this.updatePlanet();
-	  this.interval = setInterval(this.updatePlanet, 4000);
+  }
+
+  componentDidMount() {
+    const { intervalUpdate } = this.props;
+    this.interval = setInterval(this.updatePlanet, intervalUpdate);
   }
 
   componentWillUnmount() {
@@ -64,6 +70,10 @@ export default class RandomPlanet extends Component {
       </div>
     );
   }
+}
+
+RandomPlanet.defaultProps = {
+  intervalUpdate: 2000
 }
 
 /* Дочерний элемент фрагмент */
