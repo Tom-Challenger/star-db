@@ -9,7 +9,7 @@ import './random-planet.css';
 export default class RandomPlanet extends Component {
 
   // Новый синтаксис, не вошедший в стандарт
-  //static intervalUpdate = 10000;
+  //static updateInterval = 10000;
 
   constructor() {
     super();
@@ -24,8 +24,8 @@ export default class RandomPlanet extends Component {
   }
 
   componentDidMount() {
-    const { intervalUpdate } = this.props;
-    this.interval = setInterval(this.updatePlanet, intervalUpdate);
+    const { updateInterval } = this.props;
+    this.interval = setInterval(this.updatePlanet, updateInterval);
   }
 
   componentWillUnmount() {
@@ -72,8 +72,22 @@ export default class RandomPlanet extends Component {
   }
 }
 
+/*React свойство*/
 RandomPlanet.defaultProps = {
-  intervalUpdate: 2000
+  updateInterval: 2000
+}
+
+RandomPlanet.propTypes = {
+  updateInterval: (props, propName, componentName) => {
+    // Создаем функцию которая будет проверять значение свойства у компонента
+    const value = props[propName];
+
+    if (typeof value === 'number' &&  !isNaN(value)) {
+      return null
+    }
+
+    return new TypeError(`${componentName}: ${propName} must be number`)
+  }
 }
 
 /* Дочерний элемент фрагмент */
