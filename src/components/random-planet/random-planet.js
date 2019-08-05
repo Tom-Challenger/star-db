@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import SwapiService from '../../services/swapi-service';
 import Spinner from '../spinner';
@@ -78,16 +79,10 @@ RandomPlanet.defaultProps = {
 }
 
 RandomPlanet.propTypes = {
-  updateInterval: (props, propName, componentName) => {
-    // Создаем функцию которая будет проверять значение свойства у компонента
-    const value = props[propName];
-
-    if (typeof value === 'number' &&  !isNaN(value)) {
-      return null
-    }
-
-    return new TypeError(`${componentName}: ${propName} must be number`)
-  }
+  // Не обязателное свойство
+  updateInterval: PropTypes.number
+  // Обязательное свойство
+  //updateInterval: PropTypes.number.isRequired
 }
 
 /* Дочерний элемент фрагмент */
