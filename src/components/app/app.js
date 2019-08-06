@@ -11,6 +11,14 @@ import { SwapiServiceProvider } from '../swapi-service-context'
 
 import { BrowserRouter as Router, Route} from 'react-router-dom'
 
+import {
+  PersonList,
+  PlanetList,
+  StarshipList,
+  PersonDetails,
+  PlanetDetails,
+  StarshipDetails} from '../sw-components'
+
 import './app.css';
 
 export default class App extends Component {
@@ -54,7 +62,12 @@ export default class App extends Component {
           <Route path="/" render={()=><h2>Welcom to StarDB</h2>} exact={true} />
           <Route path="/people" component={PeoplePage} />
           <Route path="/planets" component={PlanetsPage} />
-          <Route path="/starships" component={StarshipsPage} />
+          <Route path="/starships" component={StarshipsPage} exact />
+          <Route path="/starships/:id" 
+            render={({match}) => {
+              const { id } = match.params;
+              return <StarshipDetails itemId={id} />
+            }} />
 
         </div>
       </Router>
