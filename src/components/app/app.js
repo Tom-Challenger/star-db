@@ -16,7 +16,7 @@ import SwapiService from '../../services/swapi-service';
 import DummySwapiService from '../../services/dummy-swapi-service';
 import { SwapiServiceProvider } from '../swapi-service-context'
 
-import { BrowserRouter as Router, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
 import {
   PersonList,
@@ -75,21 +75,25 @@ export default class App extends Component {
           <Header onServiceChange={this.onServiceChange} />
           <RandomPlanet updateInterval={10000} /> 
 
-          <Route path="/" render={()=><h2>Welcom to StarDB</h2>} exact={true} />
-          <Route path="/people/:id?" component={PeoplePage} />
-          <Route path="/planets" component={PlanetsPage} />
-          <Route path="/starships" component={StarshipsPage} exact />
-          <Route path="/starships/:id" 
-            render={({match}) => {
-              const { id } = match.params;
-              return <StarshipDetails itemId={id} />
-            }} />
+        <Switch>
+            <Route path="/" render={()=><h2>Welcom to StarDB</h2>} exact={true} />
+            <Route path="/people/:id?" component={PeoplePage} />
+            <Route path="/planets" component={PlanetsPage} />
+            <Route path="/starships" component={StarshipsPage} exact />
+            <Route path="/starships/:id" 
+              render={({match}) => {
+                const { id } = match.params;
+                return <StarshipDetails itemId={id} />
+              }} />
 
-          <Route path="/login" 
-            render={() => <LoginPage isLoggedIn={isLoggedIn} onLogin={this.onLogin} />} />
-          <Route path="/secret"
-            render={() => <SecretPage isLoggedIn={isLoggedIn} />} />
+            <Route path="/login" 
+              render={() => <LoginPage isLoggedIn={isLoggedIn} onLogin={this.onLogin} />} />
+            <Route path="/secret"
+              render={() => <SecretPage isLoggedIn={isLoggedIn} />} />
 
+            <Route render={() => <h2>Page not found</h2>} />
+            <Redirect to='/' />
+          </Switch>
         </div>
       </Router>
     </SwapiServiceProvider>
