@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 
 import Header from '../header';
 import RandomPlanet from '../random-planet';
-import { PeoplePage, PlanetsPage, StarshipsPage } from '../pages';
+
+import { 
+  PeoplePage, 
+  PlanetsPage, 
+  StarshipsPage,
+  LoginPage, 
+  SecretPage } from '../pages';
+
 import ErrorIndicator from '../error-indicator';
 
 import SwapiService from '../../services/swapi-service';
@@ -25,8 +32,15 @@ export default class App extends Component {
 
   state = {
     hasError: false,
-    swapiService: new SwapiService()
+    swapiService: new SwapiService(),
+    isLoggedIn: false
   };
+
+  onLogin = () => {
+    this.setState({
+      isLoggedIn: true
+    })
+  }
 
   onServiceChange = () => {
     this.setState(
@@ -48,6 +62,8 @@ export default class App extends Component {
 
   render() {
 
+    const { isLoggedIn } = this.state;
+
     if (this.state.hasError) {
       return <ErrorIndicator />
     }
@@ -60,7 +76,7 @@ export default class App extends Component {
           <RandomPlanet updateInterval={10000} /> 
 
           <Route path="/" render={()=><h2>Welcom to StarDB</h2>} exact={true} />
-          <Route path="/people" component={PeoplePage} />
+          <Route path="/people/:id?" component={PeoplePage} />
           <Route path="/planets" component={PlanetsPage} />
           <Route path="/starships" component={StarshipsPage} exact />
           <Route path="/starships/:id" 
@@ -68,6 +84,11 @@ export default class App extends Component {
               const { id } = match.params;
               return <StarshipDetails itemId={id} />
             }} />
+
+          <Route path="/login" 
+            render={() => <LoginPage isLoggedIn={isLoggedIn} onLogin={this.onLogin} />} />
+          <Route path="/secret"
+            render={() => <SecretPage isLoggedIn={isLoggedIn} />} />
 
         </div>
       </Router>
